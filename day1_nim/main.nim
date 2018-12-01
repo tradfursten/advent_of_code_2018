@@ -1,11 +1,7 @@
 import strutils, sequtils, sets
 
 proc solve1(x: string): int =
-  let v:int = parseInt(x[1..<x.len])
-  if x[0] == '-':
-    result = -v
-  else:
-    result = v
+  result = parseInt(x)
 
 let test1 = "+1\n+1\n+1"
 let resTest1= test1.splitLines()
