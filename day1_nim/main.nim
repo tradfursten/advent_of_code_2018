@@ -1,18 +1,15 @@
 import strutils, sequtils, sets
 
-proc solve1(x: string): int =
-  result = parseInt(x)
-
 let test1 = "+1\n+1\n+1"
 let resTest1= test1.splitLines()
-  .map(solve1)
+  .map(parseInt)
   .foldl(a + b)
 
 
 let input = readFile("input.txt").strip(trailing = true)
 
 let resultPart1 = input.splitLines()
-  .map(solve1)
+  .map(parseInt)
   .foldl(a + b)
 
 echo resultPart1
@@ -25,7 +22,7 @@ proc solve2(x: string): int =
   var done = false
   while done != true:
     for line in x.splitLines():
-      let f = solve1(line)
+      let f = parseInt(line)
       frequence += f
       if frequence in frequences:
         result = frequence
