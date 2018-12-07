@@ -13,7 +13,7 @@ proc parseInput(input: string): seq[(string, string)] =
       r.add((A, B))
   result = r
 
-proc isAvalible(s: string, d: seq[(string, string)], processed: seq[string]): bool =
+proc isAvailable(s: string, d: seq[(string, string)], processed: seq[string]): bool =
   let missesRequirements = d.filter(func(i: (string, string)): bool =
     i[1] == s and not processed.any(func(p:string):bool =
       p == i[0]
@@ -23,36 +23,36 @@ proc isAvalible(s: string, d: seq[(string, string)], processed: seq[string]): bo
 
 proc solve1(input : seq[(string, string)]): string =
   var processed: seq[string]
-  var avalible: seq[string]
+  var available: seq[string]
   var data = input
   var processing : string
   while data.len > 0:
     for d in data:
-      if not avalible.contains(d[0]) and not processed.contains(d[0]) and isAvalible(d[0], data, processed):
-        avalible.add(d[0])
-      if not avalible.contains(d[1]) and processed.contains(d[0]) and not processed.contains(d[1]) and isAvalible(d[1], data, processed):
-        avalible.add(d[1])
-    avalible.sort(func(a: string, b: string):int = cmp(a, b), order = SortOrder.Descending)
-    processing = avalible.pop
+      if not available.contains(d[0]) and not processed.contains(d[0]) and isAvailable(d[0], data, processed):
+        available.add(d[0])
+      if not available.contains(d[1]) and processed.contains(d[0]) and not processed.contains(d[1]) and isAvailable(d[1], data, processed):
+        available.add(d[1])
+    available.sort(func(a: string, b: string):int = cmp(a, b), order = SortOrder.Descending)
+    processing = available.pop
     processed.add(processing)
     data.keepItIf(it[1]!=processing)
    # echo "processing ", processing
    # echo "processed ", processed
-   # echo "available ", avalible
+   # echo "available ", available
    # echo "data ", data
     result = processed.join("")
 
-proc isAvaliblePart2(item: (string, string), processing: seq[(string, int, int)], processed, avalible:seq[string], data: seq[(string, string)]): (bool, string) =
-    if not processing.any(func(i:(string, int, int)):bool = i[0] == item[0]) and not avalible.contains(item[0]) and not processed.contains(item[0]) and isAvalible(item[0], data, processed):
+proc isAvailablePart2(item: (string, string), processing: seq[(string, int, int)], processed, available:seq[string], data: seq[(string, string)]): (bool, string) =
+    if not processing.any(func(i:(string, int, int)):bool = i[0] == item[0]) and not available.contains(item[0]) and not processed.contains(item[0]) and isAvailable(item[0], data, processed):
       return (true, item[0])
-    if not processing.any(func(i:(string, int, int)):bool = i[0] == item[1]) and not avalible.contains(item[1]) and processed.contains(item[0]) and not processed.contains(item[1]) and isAvalible(item[1], data, processed):
+    if not processing.any(func(i:(string, int, int)):bool = i[0] == item[1]) and not available.contains(item[1]) and processed.contains(item[0]) and not processed.contains(item[1]) and isAvailable(item[1], data, processed):
       return (true, item[1])
     result = (false, "")
 
 
 proc solve2(input: seq[(string, string)], nrWorkers: int, baseTime: int ): int=
   var processed: seq[string]
-  var avalible: seq[string]
+  var available: seq[string]
   var data = input
   var processing : seq[(string,int,int)]
   var workers : seq[int]
@@ -64,13 +64,13 @@ proc solve2(input: seq[(string, string)], nrWorkers: int, baseTime: int ): int=
   var a :(bool, string)
   while data.len > 0:
     for d in data:
-      a = isAvaliblePart2(d, processing, processed, avalible, data)
+      a = isAvailablePart2(d, processing, processed, available, data)
       if a[0]:
-        avalible.add(a[1])
-    avalible.sort(func(a: string, b: string):int = cmp(a, b), order = SortOrder.Descending)
-    while avalible.len > 0 and workers.len > 0:
+        available.add(a[1])
+    available.sort(func(a: string, b: string):int = cmp(a, b), order = SortOrder.Descending)
+    while available.len > 0 and workers.len > 0:
       worker = workers.pop()
-      item = avalible.pop()
+      item = available.pop()
       processing.add((item, worker, time+baseTime+ord(item[0])-ord('A')))
 
 
