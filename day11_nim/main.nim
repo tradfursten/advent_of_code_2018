@@ -41,7 +41,7 @@ proc solve2(grid: array[300, array[300, (int, int)]]): string =
         currentPower = grid[x][y][1] - grid[x-s][y][1]-grid[x][y-s][1]+grid[x-s][y-s][1]
         if currentPower > maxPower:
           maxPower = currentPower
-          maxX = x - size + 1
+          maxX = x - size +1
           maxY = y - size + 1
           size = s
   result = $maxX & "," & $maxY & "," & $size
